@@ -166,6 +166,9 @@ function render({model, el}) {
         }
         drawCtx.beginPath();
         drawCtx.moveTo(e.offsetX, e.offsetY);
+        drawCtx.lineTo(e.offsetX, e.offsetY); // Draw a tiny line to the same point
+        drawCtx.stroke(); // Stroke the line to make the dot visible
+        drawCtx.moveTo(e.offsetX, e.offsetY);
     }
 
     function startResizingIfEnabled(e) {
