@@ -8,6 +8,7 @@ setup(
     author_email='vladimir.starostin@uni-tuebingen.de',
     url='https://github.com/StarostinV/bactovision',
     packages=find_packages(),
+    include_package_data=True,
     install_requires=[
         'numpy',
         'scipy',
