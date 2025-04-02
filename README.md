@@ -6,7 +6,9 @@
 [![Python Version](https://img.shields.io/badge/python-3.7%2B-blue)](https://www.python.org/downloads/)
 [![PyPI version](https://badge.fury.io/py/bactovision.svg)](https://badge.fury.io/py/bactovision)
 
-![BactoVision](docs/images/bactovision-logo.png)
+<p align="center">
+  <img src="docs/images/bactovision-logo.png" width="300" alt="BactoVision">
+</p>
 
 
 Bactovision provides a widget for jupyter notebook for fast semi-automated annotation of bacterial growth images. It is used in the paper 
