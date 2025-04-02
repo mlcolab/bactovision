@@ -10,7 +10,7 @@ long_description = (root_dir / "README.md").read_text(encoding="utf-8")
 
 setup(
     name="bactovision",
-    version="0.1.0",
+    version="0.1.1",
     description="A package for bacterial image processing",
     long_description=long_description,
     long_description_content_type="text/markdown",
