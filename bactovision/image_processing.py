@@ -16,22 +16,22 @@ from PIL import Image, ImageDraw
 import cv2 as cv
 
 __all__ = [
-    'segment_by_thresholding',
-    'get_summary_metrics',
-    'clahe',
-    'add_convex_hulls',
-    'preprocess_image',
-    'normalize_image',
-    'working_preprocessing',
+    "segment_by_thresholding",
+    "get_summary_metrics",
+    "clahe",
+    "add_convex_hulls",
+    "preprocess_image",
+    "normalize_image",
+    "working_preprocessing",
 ]
 
 
 def segment_by_thresholding(
-        image,
-        t: float = 1.,
-        s: float = 1,
-        convexhull: bool = True,
-        small_obj_percent: float = 0.00005,
+    image,
+    t: float = 1.0,
+    s: float = 1,
+    convexhull: bool = True,
+    small_obj_percent: float = 0.00005,
 ) -> Tuple[np.ndarray, np.ndarray]:
     """
     Identifies suitable morphological components from image by thresholding.
@@ -89,7 +89,7 @@ def add_convex_hulls(mask: np.ndarray) -> np.ndarray:
         region = np.argwhere(mask == mask_label)
         hull = ConvexHull(region)
         verts = [(region[v, 0], region[v, 1]) for v in hull.vertices]
-        img = Image.new('L', mask.shape, 0)
+        img = Image.new("L", mask.shape, 0)
         ImageDraw.Draw(img).polygon(verts, outline=1, fill=1)
         new_mask += np.array(img).T * mask_label
 
@@ -97,11 +97,11 @@ def add_convex_hulls(mask: np.ndarray) -> np.ndarray:
 
 
 def working_preprocessing(
-        img,
-        subtract_background: bool = True,
-        use_clahe: bool = True,
-        clahe_limit: float = 200,
-    ) -> np.ndarray:
+    img,
+    subtract_background: bool = True,
+    use_clahe: bool = True,
+    clahe_limit: float = 200,
+) -> np.ndarray:
     """
     Preprocess image for thresholding and analysis.
 
@@ -118,9 +118,14 @@ def working_preprocessing(
 
     if use_clahe:
         img = cv.cvtColor(img.astype(np.uint16), cv.COLOR_BGR2GRAY)
-        img = normalize_image(
-            cv.createCLAHE(clipLimit=clahe_limit, tileGridSize=(1, 1)).apply(img.astype('uint16'))
-        ) * 255
+        img = (
+            normalize_image(
+                cv.createCLAHE(clipLimit=clahe_limit, tileGridSize=(1, 1)).apply(
+                    img.astype("uint16")
+                )
+            )
+            * 255
+        )
         img = cv.applyColorMap(img.astype(np.uint8), cv.COLORMAP_CIVIDIS)
 
     img = img.astype(np.float32)
@@ -139,13 +144,13 @@ def working_preprocessing(
 
 
 def preprocess_image(
-        img: np.ndarray,
-        subtract_background: bool = False,
-        use_clahe: bool = False,
-        clahe_limit: float = 200,
-        channel_weights: tuple = (0, 0.5, 1),
-        clahe_first: bool = True,
-        **kwargs
+    img: np.ndarray,
+    subtract_background: bool = False,
+    use_clahe: bool = False,
+    clahe_limit: float = 200,
+    channel_weights: tuple = (0, 0.5, 1),
+    clahe_first: bool = True,
+    **kwargs,
 ) -> np.ndarray:
     """
     Prepare image for thresholding and analysis. Channels are weighted by (0, 0.5, 1) and summed.
@@ -211,7 +216,11 @@ def normalize_image(image: np.ndarray) -> np.ndarray:
 
 
 def get_summary_metrics(
-        image, mask, grid_x, grid_y, mode: str = 'luminance-inverse',
+    image,
+    mask,
+    grid_x,
+    grid_y,
+    mode: str = "luminance-inverse",
 ) -> dict[str, np.ndarray]:
     """
     Construct tables of label, area, mean intensity, integral opacity and average opacity for each tile.
@@ -250,9 +259,12 @@ def get_summary_metrics(
         c2 = 1 / num_background_pixels
         c2[num_background_pixels == 0] = 1
 
-    average_background_brightness = (brightness_patches * (1 - mask_patches)).sum(axis=(-2, -1)) * c2
+    average_background_brightness = (brightness_patches * (1 - mask_patches)).sum(
+        axis=(-2, -1)
+    ) * c2
     intergal_opacity = (brightness_patches * mask_patches).sum(
-        axis=(-2, -1)) - average_background_brightness * num_pixels
+        axis=(-2, -1)
+    ) - average_background_brightness * num_pixels
     average_opacity = intergal_opacity * c1
 
     return dict(
@@ -263,16 +275,16 @@ def get_summary_metrics(
     )
 
 
-def img2brightness(img: np.ndarray, mode: str = 'luminance') -> np.ndarray:
-    if mode == 'luminance':
+def img2brightness(img: np.ndarray, mode: str = "luminance") -> np.ndarray:
+    if mode == "luminance":
         return img[..., 0] * 0.2989 + img[..., 1] * 0.5870 + img[..., 2] * 0.1140
-    elif mode == 'sum':
+    elif mode == "sum":
         return img.sum(-1)
-    elif mode == 'luminance-inverse':
+    elif mode == "luminance-inverse":
         img = 255 - img
         return img[..., 0] * 0.2989 + img[..., 1] * 0.5870 + img[..., 2] * 0.1140
     else:
-        raise ValueError(f'Unknown mode {mode}')
+        raise ValueError(f"Unknown mode {mode}")
 
 
 def get_patches(img: np.ndarray, y_grid: int, x_grid: int) -> np.ndarray:
@@ -286,7 +298,9 @@ def get_patches(img: np.ndarray, y_grid: int, x_grid: int) -> np.ndarray:
     y_delta = ysize // y_grid
     x_delta = xsize // x_grid
 
-    patches = img[:y_delta * y_grid, :x_delta * x_grid].reshape(y_grid, y_delta, x_grid, x_delta, channels)
+    patches = img[: y_delta * y_grid, : x_delta * x_grid].reshape(
+        y_grid, y_delta, x_grid, x_delta, channels
+    )
     patches = patches.transpose(0, 2, 1, 3, 4)
     if reduce_channels:
         patches = patches[..., 0]
@@ -297,6 +311,4 @@ def clahe(img: np.ndarray, limit: float = 200, grid_size: tuple = (1, 1)) -> np.
     """
     Apply Contrast Limited Adaptive Histogram Equalization (CLAHE) to img.
     """
-    return cv.createCLAHE(
-        clipLimit=limit, tileGridSize=grid_size
-    ).apply(img.astype('uint16'))
+    return cv.createCLAHE(clipLimit=limit, tileGridSize=grid_size).apply(img.astype("uint16"))

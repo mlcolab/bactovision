@@ -18,7 +18,7 @@ from bactovision.image_processing import normalize_image
 
 class CanvasWidget(anywidget.AnyWidget):
     # js code
-    _esm = Path(__file__).parent / 'canvas.js'
+    _esm = Path(__file__).parent / "canvas.js"
 
     # image
     image_data = traitlets.Unicode().tag(sync=True)
@@ -41,7 +41,7 @@ class CanvasWidget(anywidget.AnyWidget):
     pad_left = traitlets.Float(90).tag(sync=True)
     pad_right = traitlets.Float(50).tag(sync=True)
 
-    def set_image(self, image_array: np.array, cmap: str = 'YlGnBu'):
+    def set_image(self, image_array: np.array, cmap: str = "YlGnBu"):
         self.image_data = array2str(image_array, cmap=cmap)
 
     def set_annotation(self, mask):
@@ -52,12 +52,12 @@ class CanvasWidget(anywidget.AnyWidget):
 
     def get_grid_dict(self):
         return {
-            'num_x': int(self.grid_num_x),
-            'num_y': int(self.grid_num_y),
-            'pad_top': float(self.pad_top),
-            'pad_bottom': float(self.pad_bottom),
-            'pad_left': float(self.pad_left),
-            'pad_right': float(self.pad_right),
+            "num_x": int(self.grid_num_x),
+            "num_y": int(self.grid_num_y),
+            "pad_top": float(self.pad_top),
+            "pad_bottom": float(self.pad_bottom),
+            "pad_left": float(self.pad_left),
+            "pad_right": float(self.pad_right),
         }
 
 
@@ -67,22 +67,24 @@ def str2array(base64_str: str):
     return np.array(Image.open(BytesIO(image_bytes)))
 
 
-def array2str(arr: np.ndarray, cmap: str = 'YlGnBu'):
+def array2str(arr: np.ndarray, cmap: str = "YlGnBu"):
 
     if len(arr.shape) == 2:
         arr = cm.get_cmap(cmap)(arr)
 
-    arr = (normalize_image(arr) * 255).astype('uint8')
+    arr = (normalize_image(arr) * 255).astype("uint8")
 
     assert len(arr.shape) == 3
 
-    mode = 'RGB' if arr.shape[-1] == 3 else 'RGBA'
+    mode = "RGB" if arr.shape[-1] == 3 else "RGBA"
 
     image = Image.fromarray(arr, mode)  # Use 'RGBA' if your array includes an alpha channel
 
     # Save the PIL Image to a bytes buffer
     buffer = BytesIO()
-    image.save(buffer, format="PNG")  # You can change 'PNG' to 'JPEG' or other formats depending on your needs
+    image.save(
+        buffer, format="PNG"
+    )  # You can change 'PNG' to 'JPEG' or other formats depending on your needs
     buffer.seek(0)
 
     # Encode the bytes buffer to base64
