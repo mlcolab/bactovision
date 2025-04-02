@@ -43,10 +43,6 @@ nav:
       - Metrics: user-guide/metrics.md
 plugins:
   - search
-  - mkdocs-jupyter:
-      include_source: true
-      execute: false
-      ignore_h1_titles: true
 
 markdown_extensions:
   - pymdownx.highlight:
