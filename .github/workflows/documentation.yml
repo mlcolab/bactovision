@@ -13,6 +13,10 @@ on:
       - master
   workflow_dispatch:  # Allows manual trigger of the workflow
 
+# Add permissions section for GitHub token
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
