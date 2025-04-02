@@ -1,7 +1,7 @@
 """Image processing functions for BactoVision."""
 
 import warnings
-from typing import Tuple
+from typing import Dict, Tuple
 
 import cv2 as cv
 import numpy as np
@@ -217,7 +217,7 @@ def get_summary_metrics(
     grid_x,
     grid_y,
     mode: str = "luminance-inverse",
-) -> dict[str, np.ndarray]:
+) -> Dict[str, np.ndarray]:
     """Construct summary metrics.
 
     Metrics include label, area, mean intensity,
