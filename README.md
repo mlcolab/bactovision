@@ -3,8 +3,9 @@
 
 [![Documentation](https://img.shields.io/badge/docs-mkdocs-blue)](https://StarostinV.github.io/bactovision/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python Version](https://img.shields.io/badge/python-3.7%2B-blue)](https://www.python.org/downloads/)
+[![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/downloads/)
 [![PyPI version](https://badge.fury.io/py/bactovision.svg)](https://badge.fury.io/py/bactovision)
+[![Tests](https://github.com/StarostinV/bactovision/actions/workflows/test.yml/badge.svg)](https://github.com/StarostinV/bactovision/actions/workflows/test.yml)
 
 <p align="center">
   <img src="docs/images/bactovision-logo.png" width="300" alt="BactoVision">
