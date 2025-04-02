@@ -6,12 +6,14 @@ from typing import Literal, Optional, Union
 import ipywidgets
 import numpy as np
 from ipywidgets import (
+    BoundedIntText,
     Button,
     Dropdown,
     FloatLogSlider,
     FloatSlider,
     HBox,
     IntSlider,
+    IntText,
     Layout,
     ToggleButton,
     ToggleButtons,
@@ -20,11 +22,12 @@ from ipywidgets import (
 from PIL import Image
 
 from bactovision.canvas_widget import CanvasWidget
+from bactovision.grid_config import GridConfig, load_grid_config
 from bactovision.image_processing import (
+    default_preprocessing,
     get_summary_metrics,
     preprocess_image,
     segment_by_thresholding,
-    working_preprocessing,
 )
 
 
@@ -34,9 +37,16 @@ class BactoWidget(VBox):
     Methods:
         get_metrics: get the metrics of the image after the annotation.
         get_annotation_mask: get the annotation mask.
+        get_grid_config: get the current grid configuration.
+        set_grid_config: set the grid configuration.
     """
 
-    def __init__(self, img: Union[np.ndarray, str, Path], mask: Optional[np.ndarray] = None):
+    def __init__(
+        self,
+        img: Union[np.ndarray, str, Path],
+        mask: Optional[np.ndarray] = None,
+        grid_config: Optional[Union[GridConfig, str, Path]] = None,
+    ):
         """Initialize the BactoWidget.
 
         Args:
@@ -44,13 +54,16 @@ class BactoWidget(VBox):
             mask: numpy array of `mask` - an annotation with the same shape as the image,
                 where the pixels with value 1 correspond to the bacterial colony, and 0
                 otherwise. Optional, default is None.
+            grid_config: GridConfig instance or path to a saved grid configuration.
+                If None, default values will be used.
         """
         # load image
         if isinstance(img, (str, Path)):
             img = np.array(Image.open(img))
 
         assert isinstance(img, np.ndarray), "img should be a numpy array or a path to an image"
-        assert img.ndim == 3, "img should be a 3D array"
+        assert img.ndim == 3, "img should be a 3D array (H, W, 3)"
+        # assert img.shape[2] == 3, "img should have 3 channels (RGB)"
 
         # save original image
         self.original_img = np.array(img)
@@ -78,6 +91,13 @@ class BactoWidget(VBox):
             value=False, description="Hide annotation", **layout_dict
         )
         self.canvas_widget = CanvasWidget()
+
+        # Apply grid configuration if provided
+        if grid_config is not None:
+            if isinstance(grid_config, (str, Path)):
+                grid_config = load_grid_config(grid_config)
+            self.canvas_widget.set_grid_config(grid_config)
+
         self.threshold_slider = FloatSlider(
             1.0,
             min=0.01,
@@ -113,16 +133,21 @@ class BactoWidget(VBox):
         )
 
         # grid
+        adjust_grid_is_true = grid_config is None
         self.hide_grid_btn = ToggleButton(value=False, description="Hide grid", **layout_dict)
-        self.change_grid_btn = ToggleButton(value=False, description="Adjust grid", **layout_dict)
+        self.change_grid_btn = ToggleButton(
+            value=adjust_grid_is_true, description="Adjust grid", **layout_dict
+        )
 
-        self.x_grid_size_slider = IntSlider(
-            self.canvas_widget.grid_num_x, 1, 15, description="Horizontal grid size", **layout_dict
+        self.x_grid_size_text = BoundedIntText(
+            self.canvas_widget.grid_num_x, min=1, description="Rows", **layout_dict
         )
-        self.y_grid_size_slider = IntSlider(
-            self.canvas_widget.grid_num_y, 1, 15, description="Vertical grid size", **layout_dict
+        self.y_grid_size_text = BoundedIntText(
+            self.canvas_widget.grid_num_y, min=1, description="Columns", **layout_dict
         )
-        self.top_pad_slider = IntSlider(self.canvas_widget.pad_top, 0, 200, **layout_dict)
+        self.top_pad_slider = IntText(
+            self.canvas_widget.pad_top, min=0, description="Top padding", **layout_dict
+        )
         self.bottom_pad_slider = IntSlider(self.canvas_widget.pad_bottom, 0, 200, **layout_dict)
         self.right_pad_slider = IntSlider(self.canvas_widget.pad_right, 0, 200, **layout_dict)
         self.left_pad_slider = IntSlider(self.canvas_widget.pad_left, 0, 200, **layout_dict)
@@ -145,9 +170,17 @@ class BactoWidget(VBox):
         self.canvas_widget.set_annotation(mask)
 
         # init connections
-        self.init_connections()
+        self._init_connections()
 
         # layout
+
+        control_panel_layout = Layout(
+            border="1px solid gray",  # Add a solid border to create the frame
+            padding="2px",  # Add some padding inside the frame
+            margin="2px",  # Add some margin outside the frame
+            width="auto",  # Adjust width
+            height="auto",  # Adjust height based on content
+        )
 
         frame_layout = Layout(
             border="1px solid gray",  # Add a solid border to create the frame
@@ -173,8 +206,12 @@ class BactoWidget(VBox):
                         self.hide_grid_btn,
                     ]
                 ),
-                self.x_grid_size_slider,
-                self.y_grid_size_slider,
+                HBox(
+                    [
+                        self.x_grid_size_text,
+                        self.y_grid_size_text,
+                    ]
+                ),
             ],
             layout=frame_layout,
         )
@@ -222,9 +259,94 @@ class BactoWidget(VBox):
             layout=fixed_frame_layout,
         )
 
-        control_panel = HBox([preprocessing_column, annotation_column])
+        control_panel = HBox(
+            [
+                preprocessing_column,
+                annotation_column,
+            ],
+            layout=control_panel_layout,
+        )
 
-        super().__init__([control_panel, self.canvas_widget])
+        # Create a main layout that centers everything
+        main_layout = Layout(display="flex", flex_flow="column", align_items="center", width="100%")
+
+        super().__init__([control_panel, self.canvas_widget], layout=main_layout)
+
+        self._change_grid_btn_clicked()
+
+    def __repr__(self) -> str:
+        """Return a string representation of the BactoWidget."""
+        args = f"img={self.original_img}, mask={self.mask}, grid_config={self.grid_config}"
+        return f"BactoWidget({args})"
+
+    # -------------------------- Public methods --------------------------
+
+    def save_grid_config(self, path: Union[str, Path]) -> None:
+        """Save the current grid configuration to a file.
+
+        Args:
+            path: Path to save the grid configuration.
+        """
+        self.get_grid_config().save(path)
+
+    def load_grid_config(self, path: Union[str, Path]) -> GridConfig:
+        """Load the grid configuration from a file and set it to the widget.
+
+        Args:
+            path: Path to load the grid configuration.
+
+        Returns:
+            GridConfig instance with the loaded grid parameters.
+        """
+        self.set_grid_config(path)
+        return self.get_grid_config()
+
+    def get_grid_config(self) -> GridConfig:
+        """Get the current grid configuration.
+
+        Returns:
+            GridConfig instance with the current grid parameters.
+        """
+        return self.canvas_widget.get_grid_config()
+
+    @property
+    def grid_config(self) -> GridConfig:
+        """Get the current grid configuration.
+
+        Returns:
+            GridConfig instance with the current grid parameters.
+        """
+        return self.get_grid_config()
+
+    def set_grid_config(self, config: Union[GridConfig, str, Path]) -> None:
+        """Set the grid configuration.
+
+        Args:
+            config: GridConfig instance or path to a saved grid configuration.
+        """
+        if isinstance(config, (str, Path)):
+            config = load_grid_config(config)
+        self.canvas_widget.set_grid_config(config)
+
+        # Update UI components to reflect the new configuration
+        self.x_grid_size_text.value = config.num_x
+        self.y_grid_size_text.value = config.num_y
+        self.top_pad_slider.value = config.pad_top
+        self.bottom_pad_slider.value = config.pad_bottom
+        self.left_pad_slider.value = config.pad_left
+        self.right_pad_slider.value = config.pad_right
+
+    @property
+    def mask(self):
+        """Get the current annotation mask as a binary image.
+
+        Returns:
+            A binary mask where 1 indicates annotated pixels.
+        """
+        mask = self.canvas_widget.get_annotation()
+        mask = mask.sum(-1)
+        mask[mask > 0] = 1.0
+        return mask
 
     def get_annotation_mask(self) -> np.ndarray:
         """Get the annotation mask.
@@ -258,6 +380,8 @@ class BactoWidget(VBox):
     def cut_img(self, img: np.ndarray) -> np.ndarray:
         """Cut the image according to the current padding settings.
 
+        Does not modify the original image or the widget state.
+
         Args:
             img: The input image to be cut.
 
@@ -283,6 +407,8 @@ class BactoWidget(VBox):
         self._saved_mask = mask
         self.canvas_widget.set_annotation(mask)
         self.disable_widgets(False)
+
+    # -------------------------- Private methods --------------------------
 
     def _set_image(self, img=None):
         if img is None:
@@ -329,7 +455,7 @@ class BactoWidget(VBox):
         clahe_limit = self.clahe_limit_slider.value
         subtract_background = self.subtract_background_btn.value
 
-        self._preprocessed_img = working_preprocessing(
+        self._preprocessed_img = default_preprocessing(
             self.cut_img(self.original_img),
             use_clahe=use_clahe,
             clahe_limit=clahe_limit,
@@ -347,19 +473,7 @@ class BactoWidget(VBox):
         else:
             self._update_preprocessed_image()
 
-    @property
-    def mask(self):
-        """Get the current annotation mask as a binary image.
-
-        Returns:
-            A binary mask where 1 indicates annotated pixels.
-        """
-        mask = self.canvas_widget.get_annotation()
-        mask = mask.sum(-1)
-        mask[mask > 0] = 1.0
-        return mask
-
-    def init_connections(self):
+    def _init_connections(self):
         """Initialize all widget connections and event observers."""
         # connect widgets
         self.clahe_btn.observe(self._update_preprocessed_image, "value")
@@ -376,8 +490,8 @@ class BactoWidget(VBox):
         # link properties
         ipywidgets.link((self.draw_mode_btns, "value"), (self.canvas_widget, "mode"))
         ipywidgets.link((self.brush_size_slider, "value"), (self.canvas_widget, "brush_size"))
-        ipywidgets.link((self.x_grid_size_slider, "value"), (self.canvas_widget, "grid_num_x"))
-        ipywidgets.link((self.y_grid_size_slider, "value"), (self.canvas_widget, "grid_num_y"))
+        ipywidgets.link((self.x_grid_size_text, "value"), (self.canvas_widget, "grid_num_x"))
+        ipywidgets.link((self.y_grid_size_text, "value"), (self.canvas_widget, "grid_num_y"))
         ipywidgets.link((self.top_pad_slider, "value"), (self.canvas_widget, "pad_top"))
         ipywidgets.link((self.bottom_pad_slider, "value"), (self.canvas_widget, "pad_bottom"))
 

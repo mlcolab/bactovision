@@ -10,6 +10,7 @@ import numpy as np
 import traitlets
 from PIL import Image
 
+from bactovision.grid_config import GridConfig
 from bactovision.image_processing import normalize_image
 
 
@@ -64,6 +65,34 @@ class CanvasWidget(anywidget.AnyWidget):
             numpy array of the mask.
         """
         return str2array(self.annotated_image)
+
+    def get_grid_config(self) -> GridConfig:
+        """Get the current grid configuration.
+
+        Returns:
+            GridConfig instance containing the current grid parameters.
+        """
+        return GridConfig(
+            num_x=self.grid_num_x,
+            num_y=self.grid_num_y,
+            pad_top=self.pad_top,
+            pad_bottom=self.pad_bottom,
+            pad_left=self.pad_left,
+            pad_right=self.pad_right,
+        )
+
+    def set_grid_config(self, config: GridConfig) -> None:
+        """Set the grid configuration.
+
+        Args:
+            config: GridConfig instance with the parameters to set.
+        """
+        self.grid_num_x = config.num_x
+        self.grid_num_y = config.num_y
+        self.pad_top = config.pad_top
+        self.pad_bottom = config.pad_bottom
+        self.pad_left = config.pad_left
+        self.pad_right = config.pad_right
 
     def get_grid_dict(self) -> dict:
         """Get the grid parameters from the widget.

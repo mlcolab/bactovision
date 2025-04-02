@@ -19,7 +19,7 @@ __all__ = [
     "add_convex_hulls",
     "preprocess_image",
     "normalize_image",
-    "working_preprocessing",
+    "default_preprocessing",
 ]
 
 
@@ -91,7 +91,7 @@ def add_convex_hulls(mask: np.ndarray) -> np.ndarray:
     return new_mask
 
 
-def working_preprocessing(
+def default_preprocessing(
     img,
     subtract_background: bool = True,
     use_clahe: bool = True,
