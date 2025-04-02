@@ -6,6 +6,8 @@
 [![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/downloads/)
 [![PyPI version](https://badge.fury.io/py/bactovision.svg)](https://badge.fury.io/py/bactovision)
 [![Tests](https://github.com/StarostinV/bactovision/actions/workflows/test.yml/badge.svg)](https://github.com/StarostinV/bactovision/actions/workflows/test.yml)
+[![codecov](https://codecov.io/gh/StarostinV/bactovision/branch/main/graph/badge.svg)](https://codecov.io/gh/StarostinV/bactovision)
+
 
 <p align="center">
   <img src="docs/images/bactovision-logo.png" width="300" alt="BactoVision">
@@ -33,19 +35,6 @@ cd bactovision
 pip install .
 ```
 
-That will install the package along with the following dependencies:
-
-- numpy
-- scipy
-- scikit-image
-- Pillow
-- opencv-python
-- anywidget
-- traitlets
-- matplotlib
-- jupyterlab
-
-
 ### Documentation
 
-Please see the documentation [here](https://StarostinV.github.io/bactovision/).
+Please see the full documentation [here](https://StarostinV.github.io/bactovision/).
