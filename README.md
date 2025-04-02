@@ -11,7 +11,7 @@
 </p>
 
 
-Bactovision provides a widget for jupyter notebook for fast semi-automated annotation of bacterial growth images. It is used in the paper 
+Bactovision provides a widget for jupyter notebook for fast semi-automated annotation of bacterial growth images. It is used in the following paper:
 
 _Tyrosine auxotrophy shapes Staphylococcus aureus nasal colonization and interactions with commensal communities_ L. Camus et al. 2025 (submitted)
 
