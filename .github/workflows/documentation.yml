@@ -60,6 +60,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install mkdocs mkdocs-material==9.5.9 mkdocs-material-extensions
           pip install pymdown-extensions
+          pip install mkdocs-material[imaging]
           pip install -e .
 
       - name: Deploy documentation
