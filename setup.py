@@ -16,7 +16,7 @@ setup(
     long_description_content_type="text/markdown",
     author="Vladimir Starostin",
     author_email="vladimir.starostin@uni-tuebingen.de",
-    url="https://github.com/StarostinV/bactovision",
+    url="https://github.com/mlcolab/bactovision",
     packages=find_packages(exclude=["tests", "tests.*"]),
     include_package_data=True,
     install_requires=[

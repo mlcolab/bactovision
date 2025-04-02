@@ -36,4 +36,4 @@ Detailed information about each aspect of BactoVision is available in the follow
 
 ## Need Help?
 
-If you encounter any issues or have questions about using BactoVision, please [open an issue](https://github.com/StarostinV/bactovision/issues) on our GitHub repository.
+If you encounter any issues or have questions about using BactoVision, please [open an issue](https://github.com/mlcolab/bactovision/issues) on our GitHub repository.

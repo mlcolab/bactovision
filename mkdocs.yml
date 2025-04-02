@@ -1,9 +1,9 @@
 site_name: BactoVision
 site_description: A Jupyter widget for annotating and visualizing bacterial growth data
 site_author: Vladimir Starostin
-site_url: https://StarostinV.github.io/bactovision
-repo_url: https://github.com/StarostinV/bactovision
-repo_name: StarostinV/bactovision
+site_url: https://mlcolab.github.io/bactovision
+repo_url: https://github.com/mlcolab/bactovision
+repo_name: mlcolab/bactovision
 
 theme:
   name: material
@@ -61,4 +61,4 @@ markdown_extensions:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/StarostinV/bactovision
+      link: https://github.com/mlcolab/bactovision

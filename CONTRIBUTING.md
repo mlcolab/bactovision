@@ -6,7 +6,7 @@ Thank you for considering contributing to BactoVision! This document outlines th
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/StarostinV/bactovision.git
+   git clone https://github.com/mlcolab/bactovision.git
    cd bactovision
    ```
 

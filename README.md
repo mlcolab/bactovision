@@ -1,12 +1,12 @@
 # BactoVision
 ## A jupyter widget for annotating and visualizing bacterial growth data
 
-[![Documentation](https://img.shields.io/badge/docs-mkdocs-blue)](https://StarostinV.github.io/bactovision/)
+[![Documentation](https://img.shields.io/badge/docs-mkdocs-blue)](https://mlcolab.github.io/bactovision/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/downloads/)
 [![PyPI version](https://badge.fury.io/py/bactovision.svg)](https://badge.fury.io/py/bactovision)
-[![Tests](https://github.com/StarostinV/bactovision/actions/workflows/test.yml/badge.svg)](https://github.com/StarostinV/bactovision/actions/workflows/test.yml)
-[![codecov](https://codecov.io/gh/StarostinV/bactovision/branch/main/graph/badge.svg)](https://codecov.io/gh/StarostinV/bactovision)
+[![Tests](https://github.com/mlcolab/bactovision/actions/workflows/test.yml/badge.svg)](https://github.com/mlcolab/bactovision/actions/workflows/test.yml)
+[![codecov](https://codecov.io/gh/mlcolab/bactovision/branch/main/graph/badge.svg)](https://codecov.io/gh/mlcolab/bactovision)
 
 
 <p align="center">
@@ -30,14 +30,14 @@ pip install bactovision
 or install from source:
 
 ```bash
-git clone git@github.com:StarostinV/bactovision.git
+git clone git@github.com:mlcolab/bactovision.git
 cd bactovision
 pip install .
 ```
 
 ## Documentation
 
-Please see the full documentation [here](https://StarostinV.github.io/bactovision/).
+Please see the full documentation [here](https://mlcolab.github.io/bactovision/).
 
 ## Basic usage
 
