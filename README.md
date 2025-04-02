@@ -4,9 +4,8 @@
 [![Documentation](https://img.shields.io/badge/docs-mkdocs-blue)](https://mlcolab.github.io/bactovision/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/downloads/)
-[![PyPI version](https://badge.fury.io/py/bactovision.svg)](https://badge.fury.io/py/bactovision)
+[![PyPI version](https://img.shields.io/pypi/v/bactovision.svg)](https://pypi.org/project/bactovision/)
 [![Tests](https://github.com/mlcolab/bactovision/actions/workflows/test.yml/badge.svg)](https://github.com/mlcolab/bactovision/actions/workflows/test.yml)
-[![codecov](https://codecov.io/gh/mlcolab/bactovision/branch/main/graph/badge.svg)](https://codecov.io/gh/mlcolab/bactovision)
 
 
 <p align="center">
