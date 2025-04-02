@@ -34,3 +34,8 @@ var/
 
 # Documentation
 site/
+
+# Coverage
+.coverage
+coverage.xml
+htmlcov/
