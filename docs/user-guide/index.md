@@ -33,9 +33,6 @@ Detailed information about each aspect of BactoVision is available in the follow
 - [Annotations](annotations.md) - Methods for annotating bacterial colonies
 - [Grid System](grid.md) - Using the grid system for structured analysis
 
-## Examples
-
-For practical demonstrations, see our [Examples](../examples.md) page with ready-to-use code snippets and notebook samples.
 
 ## Need Help?
 

@@ -4,7 +4,7 @@
 
 ## A Jupyter widget for annotating and visualizing bacterial growth data
 
-BactoVision provides a powerful interactive widget for Jupyter notebook designed for fast semi-automated annotation of bacterial growth images. It combines intuitive manual drawing tools with automatic detection algorithms to make the annotation process efficient and accurate.
+BactoVision provides an interactive widget for Jupyter notebook designed for fast semi-automated annotation of bacterial growth images. It combines intuitive manual drawing tools with automatic detection algorithms to make the annotation process efficient and accurate.
 
 BactoVision is used in the paper:
 
@@ -12,6 +12,7 @@ _Tyrosine auxotrophy shapes Staphylococcus aureus nasal colonization and interac
 
 ## Key Features
 
+- **Jupyter integration** - Annotate data directly in Jupyter notebook to enable flexiblility and integration with other methods 
 - **Interactive annotation** - Combine automatic and manual annotation methods
 - **Grid system** - Analyze data in a structured grid format
 - **Image enhancement** - Apply CLAHE and other image processing techniques
