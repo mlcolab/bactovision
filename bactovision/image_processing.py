@@ -1,5 +1,9 @@
-import warnings
+"""
+Image processing functions for BactoVision.
+"""
 
+import warnings
+from typing import Tuple
 from skimage.filters import threshold_otsu, gaussian
 from skimage.morphology import remove_small_objects
 from skimage.measure import label
@@ -28,9 +32,19 @@ def segment_by_thresholding(
         s: float = 1,
         convexhull: bool = True,
         small_obj_percent: float = 0.00005,
-):
+) -> Tuple[np.ndarray, np.ndarray]:
     """
     Identifies suitable morphological components from image by thresholding.
+
+    Args:
+        image: numpy array of the image.
+        t: threshold for thresholding.
+        s: size of the morphological component.
+        convexhull: whether to add convex hulls to the mask.
+        small_obj_percent: percentage of the image area to filter small components.
+
+    Returns:
+        Tuple of the original image and the mask.
     """
     # Apply Otsu thresholding
     thresh = t * threshold_otsu(image)
@@ -54,9 +68,15 @@ def segment_by_thresholding(
     return image, mask
 
 
-def add_convex_hulls(mask):
+def add_convex_hulls(mask: np.ndarray) -> np.ndarray:
     """
     Create convex hulls around each connected component in mask.
+
+    Args:
+        mask: numpy array of the mask.
+
+    Returns:
+        Processed mask.
     """
     labels = np.unique(mask)[1:]
 
@@ -77,8 +97,23 @@ def add_convex_hulls(mask):
 
 
 def working_preprocessing(
-        img, subtract_background: bool = True,
-        use_clahe: bool = True, clahe_limit: float = 200):
+        img,
+        subtract_background: bool = True,
+        use_clahe: bool = True,
+        clahe_limit: float = 200,
+    ) -> np.ndarray:
+    """
+    Preprocess image for thresholding and analysis.
+
+    Args:
+        img: numpy array of the image.
+        subtract_background: whether to subtract the background.
+        use_clahe: whether to use CLAHE.
+        clahe_limit: limit for CLAHE.
+
+    Returns:
+        Preprocessed image.
+    """
     img = normalize_image(np.array(img)) * 255
 
     if use_clahe:
@@ -104,17 +139,29 @@ def working_preprocessing(
 
 
 def preprocess_image(
-        img,
+        img: np.ndarray,
         subtract_background: bool = False,
         use_clahe: bool = False,
         clahe_limit: float = 200,
         channel_weights: tuple = (0, 0.5, 1),
         clahe_first: bool = True,
         **kwargs
-):
+) -> np.ndarray:
     """
     Prepare image for thresholding and analysis. Channels are weighted by (0, 0.5, 1) and summed.
     The background is estimated by gaussian blur and subtracted. The image is scaled to [0, 1] and inverted.
+
+    Args:
+        img: numpy array of the image.
+        subtract_background: whether to subtract the background.
+        use_clahe: whether to use CLAHE.
+        clahe_limit: limit for CLAHE.
+        channel_weights: weights for the channels.
+        clahe_first: whether to apply CLAHE first.
+        **kwargs: additional arguments for CLAHE.
+
+    Returns:
+        Preprocessed image.
     """
 
     if clahe_first and use_clahe:
@@ -142,9 +189,15 @@ def preprocess_image(
     return img
 
 
-def normalize_image(image):
+def normalize_image(image: np.ndarray) -> np.ndarray:
     """
-    Normalize image to [0, 1]
+    Normalize image to [0, 1].
+
+    Args:
+        image: numpy array of the image.
+
+    Returns:
+        Normalized image.
     """
     image = image.astype(np.float32)
     delta = np.max(image) - np.min(image)
@@ -159,9 +212,23 @@ def normalize_image(image):
 
 def get_summary_metrics(
         image, mask, grid_x, grid_y, mode: str = 'luminance-inverse',
-):
+) -> dict[str, np.ndarray]:
     """
     Construct tables of label, area, mean intensity, integral opacity and average opacity for each tile.
+
+    Args:
+        image: numpy array of the image.
+        mask: numpy array of the mask.
+        grid_x: number of tiles in the x direction.
+        grid_y: number of tiles in the y direction.
+        mode: mode to calculate the brightness, one of 'luminance', 'luminance-inverse', 'red', 'green', 'blue'.
+            Default is 'luminance-inverse' used in the paper.
+
+    Returns:
+        A dictionary containing the following keys:
+        - 'intergal_opacity': numpy array of the integral opacity.
+        - 'average_opacity': numpy array of the average opacity.
+        - 'relative_area': numpy array of the relative area.
     """
 
     brightness = img2brightness(image, mode=mode)
@@ -196,7 +263,7 @@ def get_summary_metrics(
     )
 
 
-def img2brightness(img, mode: str = 'luminance'):
+def img2brightness(img: np.ndarray, mode: str = 'luminance') -> np.ndarray:
     if mode == 'luminance':
         return img[..., 0] * 0.2989 + img[..., 1] * 0.5870 + img[..., 2] * 0.1140
     elif mode == 'sum':
@@ -208,7 +275,7 @@ def img2brightness(img, mode: str = 'luminance'):
         raise ValueError(f'Unknown mode {mode}')
 
 
-def get_patches(img, y_grid: int, x_grid: int):
+def get_patches(img: np.ndarray, y_grid: int, x_grid: int) -> np.ndarray:
     if img.ndim == 2:
         reduce_channels = True
         img = img[..., None]
@@ -226,7 +293,7 @@ def get_patches(img, y_grid: int, x_grid: int):
     return patches
 
 
-def clahe(img, limit: float = 200, grid_size: tuple = (1, 1)):
+def clahe(img: np.ndarray, limit: float = 200, grid_size: tuple = (1, 1)) -> np.ndarray:
     """
     Apply Contrast Limited Adaptive Histogram Equalization (CLAHE) to img.
     """

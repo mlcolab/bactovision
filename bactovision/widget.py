@@ -1,4 +1,9 @@
+"""
+BactoWidget is a jupyter widget for bacterial colony growth image analysis.
+"""
+
 from pathlib import Path
+from typing import Optional, Union, Literal
 
 import ipywidgets
 from ipywidgets import (
@@ -27,7 +32,29 @@ from bactovision.image_processing import (
 
 
 class BactoWidget(VBox):
-    def __init__(self, img: np.ndarray or str or Path, mask: np.ndarray = None):
+    """
+    BactoWidget is a jupyter widget for bacterial colony growth image analysis.
+
+    Attributes:
+        original_img: numpy array of the original image.
+        mask: numpy array of the mask.
+
+    Methods:
+        get_metrics: get the metrics of the image after the annotation.
+        cut_img: cut the image to the region of interest.
+        apply_auto_annotation: apply auto annotation to the image.
+    """
+
+    def __init__(self, img: Union[np.ndarray, str, Path], mask: Optional[np.ndarray] = None):
+        """
+        Initialize the BactoWidget.
+
+        Args:
+            img: image to be analyzed, numpy array or path to image file.
+            mask: numpy array of `mask` - an annotation with the same shape as the image,
+                where the pixels with value 1 correspond to the bacterial colony, and 0
+                otherwise. Optional, default is None.
+        """
         # load image
         if isinstance(img, (str, Path)):
             img = np.array(Image.open(img))
@@ -155,7 +182,18 @@ class BactoWidget(VBox):
 
         super().__init__([control_panel, self.canvas_widget])
 
-    def get_metrics(self, brightness_mode: str = 'luminance-inverse'):
+    def get_metrics(
+            self, 
+            brightness_mode: Literal['luminance', 'luminance-inverse', 'red', 'green', 'blue'] = 'luminance-inverse'
+        ):
+        """
+        Get the metrics of the image after the annotation.
+
+        Args:
+            brightness_mode: mode to calculate the brightness,
+                one of 'luminance', 'luminance-inverse', 'red', 'green', 'blue'.
+                Default is 'luminance-inverse' used in the paper.
+        """
         return get_summary_metrics(
             self.cut_img(self.original_img),
             self.mask,
@@ -164,7 +202,7 @@ class BactoWidget(VBox):
             mode=brightness_mode,
         )
 
-    def cut_img(self, img):
+    def cut_img(self, img: np.ndarray) -> np.ndarray:
         w = self.canvas_widget
         top, bottom, left, right = map(lambda x: int(round(x)), (w.pad_top, w.pad_bottom, w.pad_left, w.pad_right))
         img = img[bottom:-top, left: - right]

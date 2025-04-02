@@ -1,3 +1,7 @@
+"""
+CanvasWidget is a jupyter widget that allows you to draw on an image.
+"""
+
 from pathlib import Path
 from io import BytesIO
 import base64
