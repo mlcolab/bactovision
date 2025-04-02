@@ -1,23 +1,21 @@
-"""
-Tests for the bactovision.image_processing module.
-"""
+"""Tests for the bactovision.image_processing module."""
 
 import numpy as np
 import pytest
 
 from bactovision.image_processing import (
-    normalize_image,
-    segment_by_thresholding,
     add_convex_hulls,
     clahe,
     get_summary_metrics,
+    normalize_image,
     preprocess_image,
+    segment_by_thresholding,
 )
 
-from tests.utils import (
-    create_test_grayscale_image,
-    create_test_color_image,
+from .utils import (
     create_test_binary_mask,
+    create_test_color_image,
+    create_test_grayscale_image,
     create_test_labeled_mask,
 )
 

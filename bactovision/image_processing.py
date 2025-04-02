@@ -1,19 +1,16 @@
-"""
-Image processing functions for BactoVision.
-"""
+"""Image processing functions for BactoVision."""
 
 import warnings
 from typing import Tuple
-from skimage.filters import threshold_otsu, gaussian
-from skimage.morphology import remove_small_objects
-from skimage.measure import label
-from skimage.segmentation import clear_border
 
-import numpy as np
-
-from scipy.spatial import ConvexHull
-from PIL import Image, ImageDraw
 import cv2 as cv
+import numpy as np
+from PIL import Image, ImageDraw
+from scipy.spatial import ConvexHull
+from skimage.filters import gaussian, threshold_otsu
+from skimage.measure import label
+from skimage.morphology import remove_small_objects
+from skimage.segmentation import clear_border
 
 __all__ = [
     "segment_by_thresholding",
@@ -33,8 +30,7 @@ def segment_by_thresholding(
     convexhull: bool = True,
     small_obj_percent: float = 0.00005,
 ) -> Tuple[np.ndarray, np.ndarray]:
-    """
-    Identifies suitable morphological components from image by thresholding.
+    """Identifies suitable morphological components from image by thresholding.
 
     Args:
         image: numpy array of the image.
@@ -69,8 +65,7 @@ def segment_by_thresholding(
 
 
 def add_convex_hulls(mask: np.ndarray) -> np.ndarray:
-    """
-    Create convex hulls around each connected component in mask.
+    """Create convex hulls around each connected component in mask.
 
     Args:
         mask: numpy array of the mask.
@@ -102,8 +97,7 @@ def working_preprocessing(
     use_clahe: bool = True,
     clahe_limit: float = 200,
 ) -> np.ndarray:
-    """
-    Preprocess image for thresholding and analysis.
+    """Preprocess image for thresholding and analysis.
 
     Args:
         img: numpy array of the image.
@@ -133,7 +127,8 @@ def working_preprocessing(
     img = 0.5 * img[:, :, 1] + 1 * img[:, :, 2]
 
     if subtract_background:
-        # Estimate background by gaussian. Scale sigma with image area to compensate for different resolutions
+        # Estimate background by gaussian.
+        # Scale sigma with image area to compensate for different resolutions
         background = gaussian(img, sigma=np.prod(img.shape) / 10000, truncate=4)
         img -= background  # This may contain some negative values
 
@@ -152,9 +147,11 @@ def preprocess_image(
     clahe_first: bool = True,
     **kwargs,
 ) -> np.ndarray:
-    """
-    Prepare image for thresholding and analysis. Channels are weighted by (0, 0.5, 1) and summed.
-    The background is estimated by gaussian blur and subtracted. The image is scaled to [0, 1] and inverted.
+    """Prepare image for thresholding and analysis.
+
+    Channels are weighted by (0, 0.5, 1) and summed.
+    The background is estimated by gaussian blur and subtracted.
+    The image is scaled to [0, 1] and inverted.
 
     Args:
         img: numpy array of the image.
@@ -168,7 +165,6 @@ def preprocess_image(
     Returns:
         Preprocessed image.
     """
-
     if clahe_first and use_clahe:
         img = normalize_image(img) * 255
         img = cv.cvtColor(img.astype(np.uint16), cv.COLOR_BGR2GRAY)
@@ -181,7 +177,8 @@ def preprocess_image(
     # Convert to float and rescale to range [0,1]
 
     if subtract_background:
-        # Estimate background by gaussian. Scale sigma with image area to compensate for different resolutions
+        # Estimate background by gaussian.
+        # Scale sigma with image area to compensate for different resolutions
         background = gaussian(img, sigma=np.prod(img.shape) / 10000, truncate=4)
         img -= background  # This may contain some negative values
 
@@ -195,8 +192,7 @@ def preprocess_image(
 
 
 def normalize_image(image: np.ndarray) -> np.ndarray:
-    """
-    Normalize image to [0, 1].
+    """Normalize image to [0, 1].
 
     Args:
         image: numpy array of the image.
@@ -222,15 +218,18 @@ def get_summary_metrics(
     grid_y,
     mode: str = "luminance-inverse",
 ) -> dict[str, np.ndarray]:
-    """
-    Construct tables of label, area, mean intensity, integral opacity and average opacity for each tile.
+    """Construct summary metrics.
+
+    Metrics include label, area, mean intensity,
+    integral opacity and average opacity for each tile.
 
     Args:
         image: numpy array of the image.
         mask: numpy array of the mask.
         grid_x: number of tiles in the x direction.
         grid_y: number of tiles in the y direction.
-        mode: mode to calculate the brightness, one of 'luminance', 'luminance-inverse', 'red', 'green', 'blue'.
+        mode: mode to calculate the brightness, one of
+            'luminance', 'luminance-inverse', 'red', 'green', 'blue'.
             Default is 'luminance-inverse' used in the paper.
 
     Returns:
@@ -239,7 +238,6 @@ def get_summary_metrics(
         - 'average_opacity': numpy array of the average opacity.
         - 'relative_area': numpy array of the relative area.
     """
-
     brightness = img2brightness(image, mode=mode)
 
     brightness_patches = get_patches(brightness, grid_y, grid_x)
@@ -308,7 +306,14 @@ def get_patches(img: np.ndarray, y_grid: int, x_grid: int) -> np.ndarray:
 
 
 def clahe(img: np.ndarray, limit: float = 200, grid_size: tuple = (1, 1)) -> np.ndarray:
-    """
-    Apply Contrast Limited Adaptive Histogram Equalization (CLAHE) to img.
+    """Apply Contrast Limited Adaptive Histogram Equalization (CLAHE) to img.
+
+    Args:
+        img: numpy array of the image.
+        limit: limit for CLAHE.
+        grid_size: size of the grid for CLAHE.
+
+    Returns:
+        CLAHE-processed image.
     """
     return cv.createCLAHE(clipLimit=limit, tileGridSize=grid_size).apply(img.astype("uint16"))

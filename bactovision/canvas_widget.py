@@ -1,22 +1,21 @@
-"""
-CanvasWidget is a jupyter widget that allows you to draw on an image.
-"""
+"""CanvasWidget is a jupyter widget that allows you to draw on an image."""
 
-from pathlib import Path
-from io import BytesIO
 import base64
-from PIL import Image
+from io import BytesIO
+from pathlib import Path
 
 import anywidget
-import traitlets
-import numpy as np
-
 import matplotlib.cm as cm
+import numpy as np
+import traitlets
+from PIL import Image
 
 from bactovision.image_processing import normalize_image
 
 
 class CanvasWidget(anywidget.AnyWidget):
+    """CanvasWidget is a jupyter widget that allows you to draw on an image."""
+
     # js code
     _esm = Path(__file__).parent / "canvas.js"
 
@@ -41,16 +40,37 @@ class CanvasWidget(anywidget.AnyWidget):
     pad_left = traitlets.Float(90).tag(sync=True)
     pad_right = traitlets.Float(50).tag(sync=True)
 
-    def set_image(self, image_array: np.array, cmap: str = "YlGnBu"):
+    def set_image(self, image_array: np.array, cmap: str = "YlGnBu") -> None:
+        """Set the image to be displayed in the widget.
+
+        Args:
+            image_array: numpy array of the image.
+            cmap: colormap to use for the image.
+        """
         self.image_data = array2str(image_array, cmap=cmap)
 
-    def set_annotation(self, mask):
+    def set_annotation(self, mask: np.array) -> None:
+        """Set the annotation mask to be displayed in the widget.
+
+        Args:
+            mask: numpy array of the mask.
+        """
         self.annotated_image = array2str(mask2red(mask))
 
-    def get_annotation(self):
+    def get_annotation(self) -> np.array:
+        """Get the annotation mask from the widget.
+
+        Returns:
+            numpy array of the mask.
+        """
         return str2array(self.annotated_image)
 
-    def get_grid_dict(self):
+    def get_grid_dict(self) -> dict:
+        """Get the grid parameters from the widget.
+
+        Returns:
+            dictionary of the grid parameters.
+        """
         return {
             "num_x": int(self.grid_num_x),
             "num_y": int(self.grid_num_y),
@@ -61,14 +81,30 @@ class CanvasWidget(anywidget.AnyWidget):
         }
 
 
-def str2array(base64_str: str):
+def str2array(base64_str: str) -> np.ndarray:
+    """Convert a base64 string to a numpy array.
+
+    Args:
+        base64_str: base64 string of the image.
+
+    Returns:
+        A numpy array representing the decoded image.
+    """
     base64_str = base64_str.split(",")[1] if "," in base64_str else base64_str
     image_bytes = base64.b64decode(base64_str)
     return np.array(Image.open(BytesIO(image_bytes)))
 
 
-def array2str(arr: np.ndarray, cmap: str = "YlGnBu"):
+def array2str(arr: np.ndarray, cmap: str = "YlGnBu") -> str:
+    """Convert a numpy array to a base64 string.
 
+    Args:
+        arr: numpy array of the image.
+        cmap: colormap to use for the image.
+
+    Returns:
+        A base64 encoded string of the image.
+    """
     if len(arr.shape) == 2:
         arr = cm.get_cmap(cmap)(arr)
 
@@ -96,7 +132,15 @@ def array2str(arr: np.ndarray, cmap: str = "YlGnBu"):
     return image_base64_str
 
 
-def mask2red(mask):
+def mask2red(mask: np.ndarray) -> np.ndarray:
+    """Convert a mask to a red image.
+
+    Args:
+        mask: numpy array of the mask.
+
+    Returns:
+        numpy array of the red image.
+    """
     annotation = ((mask > 0).astype(np.uint8) * 255)[..., None].repeat(4, 2)
     annotation[(mask > 0), 0] = 255
     annotation[(mask > 0), 3] = 255 // 2

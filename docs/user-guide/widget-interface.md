@@ -140,4 +140,4 @@ plt.imshow(metrics['integral_opacity'])
 plt.title('Integral Opacity')
 plt.colorbar()
 plt.show()
-``` 
+```

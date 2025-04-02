@@ -148,4 +148,4 @@ For images with uneven backgrounds or complex growth patterns:
 1. Start with a more permissive automatic threshold
 2. Manually erase false positives
 3. Add missed colonies by hand
-4. Consider adjusting the grid to exclude problematic areas 
+4. Consider adjusting the grid to exclude problematic areas

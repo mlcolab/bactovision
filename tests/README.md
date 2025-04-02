@@ -38,4 +38,4 @@ The tests require pytest and pytest-cov, which can be installed from the require
 
 ```bash
 pip install -r requirements-dev.txt
-``` 
+```

@@ -1,6 +1,4 @@
-"""
-BactoVision is a lightweight Python library for analyzing bacterial colony growth patterns.
-"""
+"""BactoVision is a lightweight Python library for analyzing bacterial colony growth patterns."""
 
 from bactovision.widget import BactoWidget
 

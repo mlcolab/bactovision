@@ -1,39 +1,35 @@
-"""
-BactoWidget is a jupyter widget for bacterial colony growth image analysis.
-"""
+"""BactoVision widget module for interactive visualization and analysis."""
 
 from pathlib import Path
-from typing import Optional, Union, Literal
+from typing import Literal, Optional, Union
 
 import ipywidgets
+import numpy as np
 from ipywidgets import (
-    VBox,
+    Button,
+    Dropdown,
+    FloatLogSlider,
+    FloatSlider,
     HBox,
     IntSlider,
-    FloatSlider,
-    FloatLogSlider,
-    Button,
+    Layout,
     ToggleButton,
     ToggleButtons,
-    Layout,
-    Dropdown,
+    VBox,
 )
-
-import numpy as np
 from PIL import Image
 
 from bactovision.canvas_widget import CanvasWidget
 from bactovision.image_processing import (
-    segment_by_thresholding,
-    preprocess_image,
-    working_preprocessing,
     get_summary_metrics,
+    preprocess_image,
+    segment_by_thresholding,
+    working_preprocessing,
 )
 
 
 class BactoWidget(VBox):
-    """
-    BactoWidget is a jupyter widget for bacterial colony growth image analysis.
+    """BactoWidget is a jupyter widget for bacterial colony growth image analysis.
 
     Methods:
         get_metrics: get the metrics of the image after the annotation.
@@ -41,8 +37,7 @@ class BactoWidget(VBox):
     """
 
     def __init__(self, img: Union[np.ndarray, str, Path], mask: Optional[np.ndarray] = None):
-        """
-        Initialize the BactoWidget.
+        """Initialize the BactoWidget.
 
         Args:
             img: image to be analyzed, numpy array or path to image file.
@@ -232,8 +227,9 @@ class BactoWidget(VBox):
         super().__init__([control_panel, self.canvas_widget])
 
     def get_annotation_mask(self) -> np.ndarray:
-        """
-        Get the annotation mask. The mask is a numpy array with the same shape as the original image,
+        """Get the annotation mask.
+
+        The mask is a numpy array with the same shape as the original image,
         where the pixels with value 1 correspond to the bacterial colony, and 0 otherwise.
         """
         return self.mask
@@ -244,8 +240,7 @@ class BactoWidget(VBox):
             "luminance", "luminance-inverse", "red", "green", "blue"
         ] = "luminance-inverse",
     ):
-        """
-        Get the metrics of the image after the annotation.
+        """Get the metrics of the image after the annotation.
 
         Args:
             brightness_mode: mode to calculate the brightness,
@@ -261,6 +256,14 @@ class BactoWidget(VBox):
         )
 
     def cut_img(self, img: np.ndarray) -> np.ndarray:
+        """Cut the image according to the current padding settings.
+
+        Args:
+            img: The input image to be cut.
+
+        Returns:
+            The cut image.
+        """
         w = self.canvas_widget
         top, bottom, left, right = map(
             lambda x: int(round(x)), (w.pad_top, w.pad_bottom, w.pad_left, w.pad_right)
@@ -269,6 +272,7 @@ class BactoWidget(VBox):
         return img
 
     def apply_auto_annotation(self, *args):
+        """Apply automatic annotation based on current threshold and size settings."""
         # self.annotate_btn.description = str(btn.value)
         t = self.threshold_slider.value
         s = self.small_object_size.value
@@ -289,6 +293,11 @@ class BactoWidget(VBox):
         self._set_image()
 
     def disable_widgets(self, value: bool = True):
+        """Enable or disable all control widgets.
+
+        Args:
+            value: True to disable widgets, False to enable them.
+        """
         for widget in self.control_widgets + [self.hide_annotation_btn, self.clahe_btn]:
             widget.disabled = value
 
@@ -340,12 +349,18 @@ class BactoWidget(VBox):
 
     @property
     def mask(self):
+        """Get the current annotation mask as a binary image.
+
+        Returns:
+            A binary mask where 1 indicates annotated pixels.
+        """
         mask = self.canvas_widget.get_annotation()
         mask = mask.sum(-1)
         mask[mask > 0] = 1.0
         return mask
 
     def init_connections(self):
+        """Initialize all widget connections and event observers."""
         # connect widgets
         self.clahe_btn.observe(self._update_preprocessed_image, "value")
         self.clahe_limit_slider.observe(self._update_preprocessed_image, "value")

@@ -140,4 +140,4 @@ For more detailed information about specific features, explore the other guides:
 
 - [Widget Interface](widget-interface.md) for UI details
 - [Annotations](annotations.md) for advanced annotation techniques
-- [Grid System](grid.md) for detailed grid configuration 
+- [Grid System](grid.md) for detailed grid configuration

@@ -39,4 +39,4 @@ docs:
 
 # Serve documentation locally
 docs-serve:
-	mkdocs serve 
+	mkdocs serve

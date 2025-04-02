@@ -81,4 +81,4 @@ jupyter labextension install @jupyter-widgets/jupyterlab-manager
 
 ### Getting Help
 
-If you experience any issues with installation, please [open an issue](https://github.com/mlcolab/bactovision/issues) on our GitHub repository with details about the problem and your environment. 
+If you experience any issues with installation, please [open an issue](https://github.com/mlcolab/bactovision/issues) on our GitHub repository with details about the problem and your environment.

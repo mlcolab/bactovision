@@ -1,10 +1,9 @@
-"""
-Utility functions for testing.
-"""
+"""Utility functions for testing."""
+
+import io
 
 import numpy as np
 from PIL import Image
-import io
 
 
 def create_test_binary_mask(size=(50, 50)):

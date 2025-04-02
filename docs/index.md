@@ -12,7 +12,7 @@ _Tyrosine auxotrophy shapes Staphylococcus aureus nasal colonization and interac
 
 ## Key Features
 
-- **Jupyter integration** - Annotate data directly in Jupyter notebook to enable flexiblility and integration with other methods 
+- **Jupyter integration** - Annotate data directly in Jupyter notebook to enable flexiblility and integration with other methods
 - **Interactive annotation** - Combine automatic and manual annotation methods
 - **Grid system** - Analyze data in a structured grid format
 - **Image enhancement** - Apply CLAHE and other image processing techniques
@@ -43,6 +43,6 @@ metrics = widget.get_metrics()
 If you use BactoVision in your research, please cite:
 
 ```
-Camus L. et al. (2025). Tyrosine auxotrophy shapes Staphylococcus aureus nasal colonization 
+Camus L. et al. (2025). Tyrosine auxotrophy shapes Staphylococcus aureus nasal colonization
 and interactions with commensal communities. [Journal pending].
 ```

@@ -84,4 +84,4 @@ To serve the documentation locally:
 
 ```bash
 mkdocs serve
-``` 
+```

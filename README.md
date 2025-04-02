@@ -1,4 +1,4 @@
-# BactoVision 
+# BactoVision
 ## A jupyter widget for annotating and visualizing bacterial growth data
 
 [![Documentation](https://img.shields.io/badge/docs-mkdocs-blue)](https://StarostinV.github.io/bactovision/)
@@ -30,7 +30,7 @@ or install from source:
 git clone git@github.com:StarostinV/bactovision.git
 cd bactovision
 pip install .
-``` 
+```
 
 That will install the package along with the following dependencies:
 

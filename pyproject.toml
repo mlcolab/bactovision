@@ -24,4 +24,4 @@ exclude = '''
 profile = "black"
 line_length = 100
 multi_line_output = 3
-include_trailing_comma = true 
+include_trailing_comma = true
