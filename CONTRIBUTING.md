@@ -12,11 +12,6 @@ Thank you for considering contributing to BactoVision! This document outlines th
 
 2. Set up the development environment (this installs all dependencies and pre-commit hooks):
    ```bash
-   ./setup_dev.sh
-   ```
-
-   Alternatively, you can run these commands manually:
-   ```bash
    pip install -r requirements-dev.txt
    pip install -e .
    pre-commit install
