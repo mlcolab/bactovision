@@ -22,7 +22,7 @@ _Tyrosine auxotrophy shapes Staphylococcus aureus nasal colonization and interac
 ## Quick Start
 
 ```python
-from bactovision.widget import BactoWidget
+from bactovision import BactoWidget
 
 # Create a widget with an image
 widget = BactoWidget('path/to/image.png')
