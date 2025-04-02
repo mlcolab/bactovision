@@ -140,10 +140,10 @@ class BactoWidget(VBox):
         )
 
         self.x_grid_size_text = BoundedIntText(
-            self.canvas_widget.grid_num_x, min=1, description="Rows", **layout_dict
+            self.canvas_widget.grid_num_x, min=1, description="Columns", **layout_dict
         )
         self.y_grid_size_text = BoundedIntText(
-            self.canvas_widget.grid_num_y, min=1, description="Columns", **layout_dict
+            self.canvas_widget.grid_num_y, min=1, description="Rows", **layout_dict
         )
         self.top_pad_slider = IntText(
             self.canvas_widget.pad_top, min=0, description="Top padding", **layout_dict

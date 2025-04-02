@@ -234,7 +234,7 @@ def get_summary_metrics(
 
     Returns:
         A dictionary containing the following keys:
-        - 'intergal_opacity': numpy array of the integral opacity.
+        - 'integral_opacity': numpy array of the integral opacity.
         - 'average_opacity': numpy array of the average opacity.
         - 'relative_area': numpy array of the relative area.
     """
@@ -260,13 +260,13 @@ def get_summary_metrics(
     average_background_brightness = (brightness_patches * (1 - mask_patches)).sum(
         axis=(-2, -1)
     ) * c2
-    intergal_opacity = (brightness_patches * mask_patches).sum(
+    integral_opacity = (brightness_patches * mask_patches).sum(
         axis=(-2, -1)
     ) - average_background_brightness * num_pixels
-    average_opacity = intergal_opacity * c1
+    average_opacity = integral_opacity * c1
 
     return dict(
-        intergal_opacity=intergal_opacity,
+        integral_opacity=integral_opacity,
         average_opacity=average_opacity,
         relative_area=relative_area,
         num_pixels=num_pixels,

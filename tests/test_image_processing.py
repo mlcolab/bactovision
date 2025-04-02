@@ -130,7 +130,7 @@ def test_get_summary_metrics():
     metrics = get_summary_metrics(img, mask, grid_x=2, grid_y=2, mode="luminance")
 
     # Check that the metrics contain the expected keys
-    assert "intergal_opacity" in metrics
+    assert "integral_opacity" in metrics
     assert "average_opacity" in metrics
     assert "relative_area" in metrics
     assert "num_pixels" in metrics

@@ -28,30 +28,15 @@ cd bactovision
 pip install .
 ```
 
-## Dependencies
-
-BactoVision has the following dependencies, which will be automatically installed with pip:
-
-- numpy
-- scipy
-- scikit-image
-- Pillow
-- opencv-python
-- anywidget
-- traitlets
-- matplotlib
-- jupyterlab
-
 ## Verifying Installation
 
 To verify that BactoVision is installed correctly, open a Jupyter notebook and run:
 
 ```python
 from bactovision.widget import BactoWidget
-print(BactoWidget)
 ```
 
-If the installation was successful, this should print the widget class information without any errors.
+If the installation was successful, this should import the widget class without any errors.
 
 ## Troubleshooting
 
@@ -73,11 +58,13 @@ For JupyterLab users, if the widget doesn't display properly, ensure that the wi
 jupyter labextension list
 ```
 
-The output should include `anywidget` or similar entries. If not, you may need to run:
+The output should include `anywidget` or similar entries. If not, you may need to run
 
 ```bash
 jupyter labextension install @jupyter-widgets/jupyterlab-manager
 ```
+
+and restart the jupyter server.
 
 ### Getting Help
 

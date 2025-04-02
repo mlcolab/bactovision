@@ -19,7 +19,7 @@ The widget interface is divided into several functional areas:
 A typical workflow using BactoVision follows these steps:
 
 1. **Load an image** - Create a BactoWidget with your bacterial growth image
-2. **Adjust the grid** - Set up the grid to match your experimental design
+2. **Adjust the grid** - Set up the grid to match your experimental design (or load the configured grid if the images share the same geometry)
 3. **Preprocess the image** - Enhance contrast and other properties if needed
 4. **Annotate** - Use automatic methods and refine with manual tools
 5. **Extract data** - Get quantitative measurements from your annotations
@@ -29,9 +29,9 @@ A typical workflow using BactoVision follows these steps:
 Detailed information about each aspect of BactoVision is available in the following guides:
 
 - [Basic Usage](basic-usage.md) - Getting started with BactoVision
-- [Widget Interface](widget-interface.md) - Overview of the user interface components
+- [Grid System](grid.md) - Setting the grid
 - [Annotations](annotations.md) - Methods for annotating bacterial colonies
-- [Grid System](grid.md) - Using the grid system for structured analysis
+- [Metrics](metrics.md) - Available metrics for analysis
 
 
 ## Need Help?

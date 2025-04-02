@@ -38,10 +38,15 @@ nav:
   - User Guide:
       - Overview: user-guide/index.md
       - Basic Usage: user-guide/basic-usage.md
-      - Widget Interface: user-guide/widget-interface.md
-
+      - Grid: user-guide/grid.md
+      - Annotation: user-guide/annotations.md
+      - Metrics: user-guide/metrics.md
 plugins:
   - search
+  - mkdocs-jupyter:
+      include_source: true
+      execute: false
+      ignore_h1_titles: true
 
 markdown_extensions:
   - pymdownx.highlight:
