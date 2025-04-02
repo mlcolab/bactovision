@@ -39,4 +39,4 @@ For practical demonstrations, see our [Examples](../examples.md) page with ready
 
 ## Need Help?
 
-If you encounter any issues or have questions about using BactoVision, please [open an issue](https://github.com/mlcolab/bactovision/issues) on our GitHub repository. 
+If you encounter any issues or have questions about using BactoVision, please [open an issue](https://github.com/StarostinV/bactovision/issues) on our GitHub repository. 
