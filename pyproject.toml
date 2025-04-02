@@ -25,3 +25,17 @@ profile = "black"
 line_length = 100
 multi_line_output = 3
 include_trailing_comma = true
+
+[tool.coverage.run]
+source = ["bactovision"]
+omit = ["tests/*", "docs/*", "examples/*", "setup.py"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "pass",
+    "raise ImportError"
+]
