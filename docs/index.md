@@ -31,6 +31,13 @@ widget = BactoWidget('path/to/image.png')
 widget
 ```
 
+To get the mask and the metrics after the annotation is completed, run:
+
+```python
+annotation_mask = widget.get_annotation_mask()
+metrics = widget.get_metrics()
+```
+
 ## Citation
 
 If you use BactoVision in your research, please cite:

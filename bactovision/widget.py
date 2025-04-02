@@ -35,14 +35,9 @@ class BactoWidget(VBox):
     """
     BactoWidget is a jupyter widget for bacterial colony growth image analysis.
 
-    Attributes:
-        original_img: numpy array of the original image.
-        mask: numpy array of the mask.
-
     Methods:
         get_metrics: get the metrics of the image after the annotation.
-        cut_img: cut the image to the region of interest.
-        apply_auto_annotation: apply auto annotation to the image.
+        get_annotation_mask: get the annotation mask.
     """
 
     def __init__(self, img: Union[np.ndarray, str, Path], mask: Optional[np.ndarray] = None):
@@ -181,6 +176,13 @@ class BactoWidget(VBox):
         control_panel = HBox([preprocessing_column, annotation_column])
 
         super().__init__([control_panel, self.canvas_widget])
+
+    def get_annotation_mask(self) -> np.ndarray:
+        """
+        Get the annotation mask. The mask is a numpy array with the same shape as the original image,
+        where the pixels with value 1 correspond to the bacterial colony, and 0 otherwise.
+        """
+        return self.mask
 
     def get_metrics(
             self, 
